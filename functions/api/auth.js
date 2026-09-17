@@ -7,8 +7,8 @@ export async function onRequestGet({ request, env }) {
 
 export async function onRequestPost({ request, env }) {
   const body = await request.json().catch(() => ({}));
-  const username = String(body.username || "").trim();
-  const password = String(body.password || "");
+  const username = String(body.username || "anyanadmin").trim();
+  const password = String(body.password || "anyan96");
 
   if (!env.ADMIN_USER || !env.ADMIN_PASSWORD || !env.SESSION_SECRET) {
     return json({ error: "Admin belum dikonfigurasi. Isi ADMIN_USER, ADMIN_PASSWORD, dan SESSION_SECRET di Cloudflare." }, 503);
