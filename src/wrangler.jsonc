@@ -1,0 +1,9 @@
+{
+  "name": "wedding-page",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-17",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  }
+}
