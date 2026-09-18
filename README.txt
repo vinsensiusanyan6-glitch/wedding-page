@@ -1,29 +1,21 @@
-WEDDING LUXURY — CLOUDFLARE PAGES + GOOGLE DRIVE / APPS SCRIPT
-===============================================================
+WEDDING LUXURY — GOOGLE DRIVE VERSION
 
-1. `/` = undangan publik, tanpa login.
-2. `/manage/` = halaman privat untuk upload/hapus foto.
-3. `/api/photos` = daftar foto publik.
-4. `/api/upload` = upload/hapus foto, wajib session admin.
-5. Google Apps Script menyimpan foto ke Google Drive.
-6. Tidak menggunakan Cloudflare R2.
-7. Tidak menggunakan wrangler.json/wrangler.toml.
+Admin login:
+Password: 12345
 
-Cloudflare Pages:
-- GitHub integration
-- Framework: None
-- Build command: `exit 0`
-- Build output directory: `.`
+Tidak memakai Cloudflare R2, GitHub Token, atau Cloudflare Environment Variables.
 
-Environment Variables / Secrets:
-- ADMIN_USER
-- ADMIN_PASSWORD
-- SESSION_SECRET
-- GOOGLE_SCRIPT_URL
-- GOOGLE_SCRIPT_TOKEN
+SETUP GOOGLE DRIVE:
+1. Buat folder Google Drive untuk foto.
+2. Copy Folder ID dari URL folder.
+3. Buka google-apps-script/Code.gs.
+4. Ganti GANTI_DENGAN_ID_FOLDER_DRIVE dengan Folder ID.
+5. Deploy Apps Script sebagai Web App: Execute as Me, Who has access Anyone.
+6. URL Apps Script sudah ditanam di assets/js/manage.js dan assets/js/public-gallery.js.
 
-Lihat `google-apps-script/SETUP.md` untuk setup Google Drive + Apps Script.
+TEST LOKAL:
+Jalankan folder wedding-luxury dengan VS Code Live Server.
+Buka /manage/
+Password: 12345
 
-Upload: JPG/PNG/WEBP, maksimum 8 MB. Setiap slot menyimpan satu foto; upload baru mengganti foto lama.
-
-RSVP tetap dapat menggunakan Google Apps Script terpisah seperti konfigurasi di assets/js/script.js.
+Catatan: upload dikirim ke Google Apps Script menggunakan POST no-cors, lalu halaman memuat ulang daftar foto. Google Drive harus mengizinkan file dengan link untuk dilihat agar foto bisa tampil di tamu.
