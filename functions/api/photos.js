@@ -1,10 +1,12 @@
 const SLOTS = ["groom", "bride", "photo01", "photo02", "photo03", "photo04", "photo05", "photo06"];
 
-export async function onRequestGet({ env }) {
-  if (!env.GOOGLE_SCRIPT_URL || !env.GOOGLE_SCRIPT_TOKEN) return json({});
+// Google Apps Script Web App. No Cloudflare Variables required.
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHT3gwV-qpFUMKgu26zE7Xt_P4LqRA_bnIKMLv-ga1fJP1YQTevBhduNvi_y8fV_pbKQ/exec";
+const GOOGLE_SCRIPT_TOKEN = "WeddingGallery12345";
 
+export async function onRequestGet({ env }) {
   try {
-    const data = await callGoogleScript(env, { action: "photos" });
+    const data = await callGoogleScript({ GOOGLE_SCRIPT_URL, GOOGLE_SCRIPT_TOKEN }, { action: "photos" });
     const result = {};
     for (const slot of SLOTS) {
       if (data.photos?.[slot]) result[slot] = data.photos[slot];

@@ -4,12 +4,11 @@ import { callGoogleScript } from "./photos.js";
 const SLOTS = new Set(["groom", "bride", "photo01", "photo02", "photo03", "photo04", "photo05", "photo06"]);
 const MAX_SIZE = 8 * 1024 * 1024;
 
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHT3gwV-qpFUMKgu26zE7Xt_P4LqRA_bnIKMLv-ga1fJP1YQTevBhduNvi_y8fV_pbKQ/exec";
+const GOOGLE_SCRIPT_TOKEN = "WeddingGallery12345";
+
 export async function onRequestPost({ request, env }) {
   if (!(await verifySession(request, env))) return json({ error: "Unauthorized" }, 401);
-  if (!env.GOOGLE_SCRIPT_URL || !env.GOOGLE_SCRIPT_TOKEN) {
-    return json({ error: "Google Apps Script belum dikonfigurasi di Cloudflare." }, 503);
-  }
-
   const url = new URL(request.url);
   const slot = url.searchParams.get("slot");
   if (!SLOTS.has(slot)) return json({ error: "Slot foto tidak valid." }, 400);
@@ -29,7 +28,7 @@ export async function onRequestPost({ request, env }) {
   const base64 = btoa(binary);
 
   try {
-    const data = await callGoogleScript(env, {
+    const data = await callGoogleScript({ GOOGLE_SCRIPT_URL, GOOGLE_SCRIPT_TOKEN }, {
       action: "upload",
       slot,
       filename: file.name,
@@ -44,16 +43,12 @@ export async function onRequestPost({ request, env }) {
 
 export async function onRequestDelete({ request, env }) {
   if (!(await verifySession(request, env))) return json({ error: "Unauthorized" }, 401);
-  if (!env.GOOGLE_SCRIPT_URL || !env.GOOGLE_SCRIPT_TOKEN) {
-    return json({ error: "Google Apps Script belum dikonfigurasi di Cloudflare." }, 503);
-  }
-
   const url = new URL(request.url);
   const slot = url.searchParams.get("slot");
   if (!SLOTS.has(slot)) return json({ error: "Slot foto tidak valid." }, 400);
 
   try {
-    await callGoogleScript(env, { action: "delete", slot });
+    await callGoogleScript({ GOOGLE_SCRIPT_URL, GOOGLE_SCRIPT_TOKEN }, { action: "delete", slot });
     return json({ ok: true, slot });
   } catch (error) {
     return json({ error: error.message || "Gagal menghapus foto." }, 502);
